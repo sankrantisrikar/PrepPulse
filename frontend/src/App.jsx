@@ -3,6 +3,29 @@ import axios from 'axios';
 
 const API_BASE = '/api';
 
+// Modern gradient background component
+const GradientBackground = () => (
+  <div style={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+    zIndex: -1,
+  }}>
+    <div style={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%), radial-gradient(circle at 80% 80%, rgba(252, 70, 107, 0.3), transparent 50%)',
+      animation: 'pulse 8s ease-in-out infinite',
+    }} />
+  </div>
+);
+
 export default function App() {
   const [stage, setStage] = useState('setup'); // setup, interview, report
   const [resume, setResume] = useState('');
@@ -181,10 +204,22 @@ export default function App() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>🎯 Interview Buddy</h1>
-        <p style={styles.subtitle}>AI-Powered Interview Practice with Talking Avatar</p>
+      <GradientBackground />
+      
+      {/* Header */}
+      <header style={styles.header}>
+        <div style={styles.logo}>
+          <span style={styles.logoIcon}>🎯</span>
+          <span style={styles.logoText}>PrepPulse</span>
+        </div>
+        <nav style={styles.nav}>
+          <a href="#features" style={styles.navLink}>Features</a>
+          <a href="#how-it-works" style={styles.navLink}>How It Works</a>
+          <a href="#pricing" style={styles.navLink}>Pricing</a>
+        </nav>
+      </header>
 
+      <div style={styles.card}>
         {error && (
           <div style={styles.error}>
             ⚠️ {error}
@@ -193,27 +228,62 @@ export default function App() {
 
         {stage === 'setup' && (
           <div style={styles.setup}>
-            <textarea
-              style={styles.textarea}
-              placeholder="Paste your resume here..."
-              value={resume}
-              onChange={(e) => setResume(e.target.value)}
-              rows={8}
-            />
-            <textarea
-              style={styles.textarea}
-              placeholder="Paste the job description here..."
-              value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
-              rows={8}
-            />
-            <button
-              style={styles.button}
-              onClick={startInterview}
-              disabled={isProcessing}
-            >
-              {isProcessing ? '🔄 Starting Interview...' : '🚀 Start Interview'}
-            </button>
+            <div style={styles.hero}>
+              <h1 style={styles.heroTitle}>
+                Ace Your Next Interview
+              </h1>
+              <p style={styles.heroSubtitle}>
+                Practice with an AI interviewer that adapts to your answers, provides real-time feedback, and helps you improve with personalized coaching.
+              </p>
+            </div>
+
+            <div style={styles.features}>
+              <div style={styles.featureCard} className="feature-card">
+                <span style={styles.featureIcon}>🎥</span>
+                <h3 style={styles.featureTitle}>Talking AI Avatar</h3>
+                <p style={styles.featureText}>Realistic video interviewer with lip-sync</p>
+              </div>
+              <div style={styles.featureCard} className="feature-card">
+                <span style={styles.featureIcon}>🎤</span>
+                <h3 style={styles.featureTitle}>Voice Conversation</h3>
+                <p style={styles.featureText}>Natural speech-based Q&A</p>
+              </div>
+              <div style={styles.featureCard} className="feature-card">
+                <span style={styles.featureIcon}>🧠</span>
+                <h3 style={styles.featureTitle}>Adaptive Questions</h3>
+                <p style={styles.featureText}>Personalized to your resume & job</p>
+              </div>
+              <div style={styles.featureCard} className="feature-card">
+                <span style={styles.featureIcon}>📊</span>
+                <h3 style={styles.featureTitle}>Real-Time Scoring</h3>
+                <p style={styles.featureText}>Instant feedback on every answer</p>
+              </div>
+            </div>
+
+            <div style={styles.inputSection}>
+              <h2 style={styles.sectionTitle}>Start Your Practice Interview</h2>
+              <textarea
+                style={styles.textarea}
+                placeholder="📄 Paste your resume here..."
+                value={resume}
+                onChange={(e) => setResume(e.target.value)}
+                rows={8}
+              />
+              <textarea
+                style={styles.textarea}
+                placeholder="💼 Paste the job description here..."
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                rows={8}
+              />
+              <button
+                style={styles.primaryButton}
+                onClick={startInterview}
+                disabled={isProcessing}
+              >
+                {isProcessing ? '🔄 Preparing Your Interview...' : '🚀 Start Interview'}
+              </button>
+            </div>
           </div>
         )}
 
@@ -361,7 +431,7 @@ export default function App() {
             <div style={styles.section}>
               <h3>📅 7-Day Practice Plan</h3>
               {Object.entries(report.practicePlan).map(([day, plan]) => (
-                <div key={day} style={styles.dayPlan}>
+                <div key={day} style={styles.dayPlan} className="day-plan">
                   <h4>{day.replace('-', ' ').toUpperCase()}: {plan.focus}</h4>
                   <ul>
                     {plan.exercises.map((exercise, idx) => (
@@ -402,102 +472,189 @@ export default function App() {
 const styles = {
   container: {
     minHeight: '100vh',
-    padding: '20px',
+    position: 'relative',
+    overflow: 'auto',
+  },
+  header: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    padding: '20px 40px',
+    background: 'rgba(255, 255, 255, 0.1)',
+    backdropFilter: 'blur(10px)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+    position: 'sticky',
+    top: 0,
+    zIndex: 100,
+  },
+  logo: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+  },
+  logoIcon: {
+    fontSize: '32px',
+  },
+  logoText: {
+    fontSize: '24px',
+    fontWeight: 'bold',
+    color: 'white',
+    letterSpacing: '-0.5px',
+  },
+  nav: {
+    display: 'flex',
+    gap: '32px',
+  },
+  navLink: {
+    color: 'white',
+    textDecoration: 'none',
+    fontSize: '16px',
+    fontWeight: '500',
+    transition: 'opacity 0.2s',
+    opacity: 0.9,
   },
   card: {
-    background: 'white',
-    borderRadius: '16px',
+    maxWidth: '1200px',
+    margin: '40px auto',
     padding: '40px',
-    maxWidth: '900px',
-    width: '100%',
-    boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
   },
-  title: {
+  hero: {
+    textAlign: 'center',
+    marginBottom: '60px',
+    animation: 'fadeIn 0.8s ease-out',
+  },
+  heroTitle: {
+    fontSize: '56px',
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: '20px',
+    lineHeight: '1.2',
+    textShadow: '0 2px 20px rgba(0,0,0,0.2)',
+  },
+  heroSubtitle: {
+    fontSize: '20px',
+    color: 'rgba(255, 255, 255, 0.9)',
+    maxWidth: '700px',
+    margin: '0 auto',
+    lineHeight: '1.6',
+  },
+  features: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+    gap: '24px',
+    marginBottom: '60px',
+  },
+  featureCard: {
+    background: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: '16px',
+    padding: '32px 24px',
+    textAlign: 'center',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+    transition: 'transform 0.3s, box-shadow 0.3s',
+    cursor: 'pointer',
+  },
+  featureIcon: {
+    fontSize: '48px',
+    display: 'block',
+    marginBottom: '16px',
+  },
+  featureTitle: {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: '8px',
+  },
+  featureText: {
+    fontSize: '14px',
+    color: '#666',
+    lineHeight: '1.5',
+  },
+  inputSection: {
+    background: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: '24px',
+    padding: '48px',
+    boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
+  },
+  sectionTitle: {
     fontSize: '32px',
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: '8px',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-  },
-  subtitle: {
-    textAlign: 'center',
-    color: '#666',
+    color: '#333',
     marginBottom: '32px',
-  },
-  error: {
-    background: '#fee',
-    border: '1px solid #fcc',
-    borderRadius: '8px',
-    padding: '12px',
-    marginBottom: '20px',
-    color: '#c33',
+    textAlign: 'center',
   },
   setup: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px',
+    gap: '0',
   },
   textarea: {
     width: '100%',
-    padding: '12px',
-    borderRadius: '8px',
-    border: '2px solid #ddd',
-    fontSize: '14px',
+    padding: '20px',
+    borderRadius: '12px',
+    border: '2px solid #e0e0e0',
+    fontSize: '15px',
     fontFamily: 'inherit',
     resize: 'vertical',
+    marginBottom: '20px',
+    transition: 'border-color 0.3s, box-shadow 0.3s',
+    outline: 'none',
   },
-  button: {
+  primaryButton: {
+    width: '100%',
     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     color: 'white',
     border: 'none',
-    borderRadius: '8px',
-    padding: '16px 32px',
-    fontSize: '16px',
+    borderRadius: '12px',
+    padding: '20px 40px',
+    fontSize: '18px',
     fontWeight: 'bold',
     cursor: 'pointer',
-    transition: 'transform 0.2s',
+    transition: 'transform 0.2s, box-shadow 0.2s',
+    boxShadow: '0 4px 20px rgba(102, 126, 234, 0.4)',
   },
-  secondaryButton: {
-    background: '#f0f0f0',
-    color: '#333',
-    border: 'none',
-    borderRadius: '8px',
-    padding: '16px 32px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
+  error: {
+    background: 'rgba(239, 68, 68, 0.1)',
+    border: '2px solid rgba(239, 68, 68, 0.3)',
+    borderRadius: '12px',
+    padding: '16px',
+    marginBottom: '24px',
+    color: '#dc2626',
+    fontSize: '15px',
+    fontWeight: '500',
   },
   interview: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px',
+    gap: '24px',
+    background: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: '24px',
+    padding: '40px',
+    boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
   },
   questionHeader: {
     display: 'flex',
     justifyContent: 'center',
+    marginBottom: '8px',
   },
   badge: {
-    background: '#667eea',
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     color: 'white',
-    padding: '8px 16px',
-    borderRadius: '20px',
-    fontSize: '14px',
+    padding: '10px 24px',
+    borderRadius: '24px',
+    fontSize: '15px',
     fontWeight: 'bold',
+    boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
   },
   avatarContainer: {
     width: '100%',
     height: '400px',
-    background: '#f5f5f5',
-    borderRadius: '12px',
+    background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+    borderRadius: '16px',
     overflow: 'hidden',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
   },
   video: {
     width: '100%',
@@ -512,48 +669,58 @@ const styles = {
   loading: {
     fontSize: '18px',
     color: '#999',
+    animation: 'pulse 2s ease-in-out infinite',
   },
   questionBox: {
-    background: '#f9f9f9',
-    padding: '20px',
-    borderRadius: '12px',
-    borderLeft: '4px solid #667eea',
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    padding: '28px',
+    borderRadius: '16px',
+    boxShadow: '0 8px 24px rgba(102, 126, 234, 0.3)',
   },
   question: {
-    fontSize: '18px',
-    lineHeight: '1.6',
-    color: '#333',
+    fontSize: '19px',
+    lineHeight: '1.7',
+    color: 'white',
+    margin: 0,
   },
   feedback: {
-    background: '#f0f8ff',
-    padding: '20px',
-    borderRadius: '12px',
-    border: '2px solid #667eea',
+    background: 'linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%)',
+    padding: '24px',
+    borderRadius: '16px',
+    border: '2px solid #3b82f6',
+    animation: 'slideIn 0.5s ease-out',
   },
   feedbackTitle: {
-    marginBottom: '16px',
-    color: '#667eea',
+    marginBottom: '20px',
+    color: '#1e40af',
+    fontSize: '20px',
+    fontWeight: 'bold',
   },
   scores: {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
     gap: '12px',
-    marginBottom: '16px',
+    marginBottom: '20px',
   },
   scoreItem: {
     display: 'flex',
     justifyContent: 'space-between',
-    padding: '8px 12px',
+    padding: '12px 16px',
     background: 'white',
-    borderRadius: '6px',
+    borderRadius: '10px',
+    fontSize: '15px',
+    fontWeight: '500',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
   },
   scoreValue: {
     fontWeight: 'bold',
     color: '#667eea',
+    fontSize: '16px',
   },
   feedbackList: {
     marginLeft: '20px',
     lineHeight: '1.8',
+    color: '#1e40af',
   },
   controls: {
     display: 'flex',
@@ -561,100 +728,137 @@ const styles = {
     gap: '12px',
   },
   recordButton: {
-    background: '#22c55e',
+    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     color: 'white',
     border: 'none',
-    borderRadius: '8px',
-    padding: '16px',
-    fontSize: '16px',
+    borderRadius: '12px',
+    padding: '18px',
+    fontSize: '17px',
     fontWeight: 'bold',
     cursor: 'pointer',
+    boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)',
+    transition: 'transform 0.2s',
   },
   stopButton: {
-    background: '#ef4444',
+    background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
     color: 'white',
     border: 'none',
-    borderRadius: '8px',
-    padding: '16px',
-    fontSize: '16px',
+    borderRadius: '12px',
+    padding: '18px',
+    fontSize: '17px',
     fontWeight: 'bold',
     cursor: 'pointer',
+    boxShadow: '0 4px 16px rgba(239, 68, 68, 0.4)',
+    animation: 'pulse 2s ease-in-out infinite',
   },
   endButton: {
-    background: '#f59e0b',
+    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
     color: 'white',
     border: 'none',
-    borderRadius: '8px',
-    padding: '12px',
-    fontSize: '14px',
+    borderRadius: '12px',
+    padding: '14px',
+    fontSize: '15px',
     fontWeight: 'bold',
     cursor: 'pointer',
+    boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)',
   },
   processing: {
     textAlign: 'center',
-    padding: '16px',
-    background: '#f0f0f0',
-    borderRadius: '8px',
+    padding: '20px',
+    background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
+    borderRadius: '12px',
     fontSize: '16px',
+    color: '#4b5563',
+    fontWeight: '500',
   },
   report: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '24px',
+    gap: '32px',
+    background: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: '24px',
+    padding: '48px',
+    boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
+    animation: 'fadeIn 0.8s ease-out',
   },
   reportTitle: {
     textAlign: 'center',
-    color: '#667eea',
+    color: '#1f2937',
+    fontSize: '36px',
+    fontWeight: 'bold',
+    marginBottom: '8px',
   },
   overallScore: {
     textAlign: 'center',
-    padding: '24px',
+    padding: '40px',
     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    borderRadius: '12px',
+    borderRadius: '20px',
     color: 'white',
+    boxShadow: '0 12px 40px rgba(102, 126, 234, 0.4)',
   },
   bigScore: {
-    fontSize: '48px',
+    fontSize: '64px',
     fontWeight: 'bold',
-    margin: '16px 0',
+    margin: '20px 0',
+    textShadow: '0 4px 12px rgba(0,0,0,0.2)',
   },
   scoreBreakdown: {
-    padding: '20px',
-    background: '#f9f9f9',
-    borderRadius: '12px',
+    padding: '32px',
+    background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
+    borderRadius: '16px',
+    boxShadow: '0 4px 16px rgba(0,0,0,0.05)',
   },
   section: {
-    padding: '20px',
-    background: '#f9f9f9',
-    borderRadius: '12px',
+    padding: '32px',
+    background: 'white',
+    borderRadius: '16px',
+    boxShadow: '0 4px 16px rgba(0,0,0,0.05)',
+    border: '1px solid #e5e7eb',
   },
   strengthItem: {
-    marginBottom: '16px',
-    padding: '12px',
-    background: '#e8f5e9',
-    borderRadius: '8px',
+    marginBottom: '20px',
+    padding: '20px',
+    background: 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)',
+    borderRadius: '12px',
+    borderLeft: '4px solid #10b981',
   },
   weaknessItem: {
-    marginBottom: '16px',
-    padding: '12px',
-    background: '#fff3e0',
-    borderRadius: '8px',
+    marginBottom: '20px',
+    padding: '20px',
+    background: 'linear-gradient(135deg, #fed7aa 0%, #fdba74 100%)',
+    borderRadius: '12px',
+    borderLeft: '4px solid #f59e0b',
   },
   dayPlan: {
-    marginBottom: '20px',
-    padding: '16px',
+    marginBottom: '24px',
+    padding: '24px',
     background: 'white',
-    borderRadius: '8px',
-    border: '2px solid #e0e0e0',
+    borderRadius: '12px',
+    border: '2px solid #e5e7eb',
+    transition: 'transform 0.2s, box-shadow 0.2s',
   },
   successCriteria: {
-    marginTop: '12px',
+    marginTop: '16px',
     fontStyle: 'italic',
-    color: '#22c55e',
+    color: '#10b981',
+    fontWeight: '500',
+    fontSize: '15px',
   },
   actions: {
     display: 'flex',
-    gap: '12px',
+    gap: '16px',
     justifyContent: 'center',
+    flexWrap: 'wrap',
+  },
+  secondaryButton: {
+    background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
+    color: '#374151',
+    border: '2px solid #d1d5db',
+    borderRadius: '12px',
+    padding: '16px 32px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'transform 0.2s',
   },
 };
